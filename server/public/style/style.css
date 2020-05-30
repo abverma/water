@@ -1,0 +1,77 @@
+body {
+	background: #000;
+	color: #fff;
+	padding: 10px 30px;
+	font-family: 'Montserrat', sans-serif;
+}
+
+.header {
+	height: 20vh;
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.congratulation {
+	color: #66ff33;
+	height: 40px;
+}
+
+.glass {
+	align-self: center;
+	position: relative;
+	width: 300px;
+	height: 500px;
+	margin: auto;
+	border-left: 3px solid #fff;
+	border-right: 3px solid #fff;
+	border-bottom: 3px solid #fff;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 10px;
+
+}
+
+.water {
+	width: 300px;
+	height: 0px;
+	max-height: 500px;
+	bottom: 0;
+	position: absolute;
+	background: #74ccf4;
+	transition: height 2s;
+}
+
+.main {
+	display: grid;
+	grid-template-columns: 20% 60% 20%;
+}
+
+.grid-item {
+	padding: 20px;
+}
+
+.control, .right {
+	padding: 20px;
+}
+
+.control > button {
+	display: block;
+	height: 80px;
+	min-width: 160px;
+	text-decoration: none;
+	background: #fff;
+	font-size: 20px;
+	border: none;
+	margin: 20px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.resetbtn {
+	background: #aaa !important;	
+}
+
+.right > ul {
+	list-style: none;
+	padding: 0;
+	font-size: 16px;
+}

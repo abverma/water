@@ -1,0 +1,17 @@
+{
+  "name": "pustak",
+  "version": "1.0.0",
+  "description": "Node app to manage book shelves",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Simon Goback",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "eventemitter3": "^4.0.4",
+    "express": "^4.17.1",
+    "mongodb": "^3.5.7"
+  }
+}

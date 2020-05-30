@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head>
+	<title>Water</title>
+</head>
+<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet"> 
+<link rel="stylesheet" type="text/css" href="style/style.css">
+<body>
+	<div class="header">
+		<h1>Daily water intake tracker</h1>
+		<h1 class="congratulation" hidden>Congrats, you have reached your daily target!</h1>
+	</div>
+	<div class="main">
+		<div class="control grid-item">
+			<button value=".25" onclick="fill(this)">Add 250 ml</button>
+			<button value=".5" onclick="fill(this)">Add 500 ml</button>
+			<button value="1" onclick="fill(this)">Add 1 L</button>
+			<button value="2" onclick="fill(this)">Add 2 L</button>
+			<button value="0" class="resetbtn" onclick="fill(this)">Reset</button>
+		</div>
+		<div class="view grid-item">
+			<div class="glass">
+				<div class="water"></div>
+			</div>
+		</div>
+		<div class="right grid-item">
+			<h2>Stats</h2>
+			<ul>
+				<li>Date: <span id="curdate"></span></li>
+				<li>Your daily target: <span id="target"></span> L</li>
+				<li>Today's water intake: <span id="intake"></span> L</li>
+			</ul>
+		</div>
+	</div>
+	
+</body>
+<script src="/js/app.js">
+</script>
+</html>
