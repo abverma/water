@@ -1,6 +1,5 @@
 const {MongoClient} = require('mongodb')
 const {log, error} = require('./customLogger')
-const EventEmitter = require('eventemitter3')
 
 const {DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME } = process.env
 
