@@ -5,7 +5,7 @@ const EventEmitter = require('eventemitter3')
 const {DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME } = process.env
 
 let uri
-if (DB_HOST == 'localhost') {
+if (DB_HOST == 'localhost' || DB_HOST == '0.0.0.0') {
 	uri = `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}?retryWrites=true&w=majority&connectTimeoutMS=300000`
 } else {
 	uri = `mongodb://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?retryWrites=true&w=majority&connectTimeoutMS=300000`

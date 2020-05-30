@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
 	<title>Water</title>
 </head>
@@ -19,7 +20,7 @@
 			<button value="2" onclick="fill(this)">Add 2 L</button>
 			<button value="0" class="resetbtn" onclick="fill(this)">Reset</button>
 		</div>
-		<div class="view grid-item">
+		<div class="grid-item">
 			<div class="glass">
 				<div class="water"></div>
 			</div>
@@ -27,9 +28,9 @@
 		<div class="right grid-item">
 			<h2>Stats</h2>
 			<ul>
-				<li>Date: <span id="curdate"></span></li>
-				<li>Your daily target: <span id="target"></span> L</li>
-				<li>Today's water intake: <span id="intake"></span> L</li>
+				<li><b>Date</b>: <span id="curdate"></span></li>
+				<li><b>Your daily target</b>: <span id="target"></span> L</li>
+				<li><b>Today's water intake</b>: <span id="intake"></span> L</li>
 			</ul>
 		</div>
 	</div>

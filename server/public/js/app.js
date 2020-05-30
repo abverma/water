@@ -37,12 +37,13 @@ function fill (el, value) {
 	console.log(value)
 
 	if (value == '0') {
-		fillUpto(0)
+		todaysIntake = 0
 	} else {
 		todaysIntake += parseFloat(value)
-		fillUpto(todaysIntake)
 	}
 	
+	fillUpto(todaysIntake)
+
 	updateIntake(todaysIntake)
 }
 
@@ -63,6 +64,12 @@ function fillUpto(todaysIntake) {
 	} else {
 		currentHeight = 0
 		todaysIntake = 0
+
+		Object.keys(btns).forEach((key) => {
+			if (btns[key].value != '0') {
+				btns[key].disabled = false
+			}
+		})
 	}
 	
 	if (intakeField) {
