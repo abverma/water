@@ -107,7 +107,7 @@ function fetchIntake (date) {
 		return res.json()
 	})
 	.then((res) => {
-		todaysIntake = res.data[0].intake
+		todaysIntake = res.data[0].intake || 0
 		fillUpto(todaysIntake)
 	})
 	.catch((err) => {
