@@ -1,0 +1,22 @@
+{
+  "name": "water",
+  "version": "1.0.0",
+  "description": "**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**",
+  "main": "server.js",
+  "scripts": {
+    "heroku-prebuild": "npm --prefix server run installDep",
+    "start": "cd server && node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://abverma@github.com/abverma/water.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://github.com/abverma/water.git",
+  "engines": {
+    "node": "12.13.1"
+  }
+}
