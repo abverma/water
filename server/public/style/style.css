@@ -38,6 +38,7 @@ body {
 
 .congratulation {
 	color: #66ff33;
+	display: none;
 }
 
 .glass {
@@ -125,19 +126,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 input[type="date"] {
     appearance: none;
     -webkit-appearance: none;
-    color: #fff;
+    color: #000;
     font-family: "Montserrat", arial, sans-serif;
     font-size: 16px;
     border:1px solid #111;
-    background:#000;
+    border-radius: 2px;
+    background:#fff;
     padding:5px;
     display: block !important;
     visibility: visible !important;
-    margin: auto;
+    margin: 10px auto;
 }
 
 input[type="date"], focus {
-    color: #fff;
+    color: #000;
     box-shadow: none;
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
@@ -153,6 +155,7 @@ input[type="date"], focus {
 	}
 
 	.main {
+		padding: 20px;
 		display: grid;
 		grid-template-columns: 20% 60% 20%;
 	}

@@ -4,7 +4,7 @@ let currentHeight = 0
 let currDate = new Date()
 const dailyTarget = 4
 const totalHeight = 500
-const congratulation = document.querySelector('.congratulation')
+const congratulation = document.getElementsByClassName('congratulation')[0]
 const jug = document.querySelector('.water')
 const btns = document.getElementsByTagName('button')
 const targetStatField = document.querySelector('#target')
@@ -15,14 +15,14 @@ const dateField = document.querySelector('#date')
 jug.addEventListener('transitionend', () => {
 	if (currentHeight >= 500) {
 		if (currDate.toDateString().split('T')[0] == (new Date()).toDateString().split('T')[0])
-		congratulation.hidden = false
+		congratulation.style.display = 'block'
 	}
 })
 
 document.onload = start()
 
 function start() {
-	congratulation.hidden = true
+	congratulation.style.display = 'none'
 	disableBtns(false)
 	if (targetStatField) {
 		targetStatField.innerHTML = dailyTarget
