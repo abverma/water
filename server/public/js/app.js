@@ -14,6 +14,7 @@ const dateField = document.querySelector('#date')
 
 jug.addEventListener('transitionend', () => {
 	if (currentHeight >= 500) {
+		if (currDate.toDateString().split('T')[0] == (new Date()).toDateString().split('T')[0])
 		congratulation.hidden = false
 	}
 })
