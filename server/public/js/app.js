@@ -1,27 +1,16 @@
 
 let todaysIntake = 0
 let currentHeight = 0
-
+let currDate = new Date()
 const dailyTarget = 4
 const totalHeight = 500
 const congratulation = document.querySelector('.congratulation')
 const jug = document.querySelector('.water')
 const btns = document.getElementsByTagName('button')
-const targetField = document.querySelector('#target')
-const intakeField = document.querySelector('#intake')
-const dateField = document.querySelector('#curdate')
-
-if (targetField) {
-	targetField.innerHTML = dailyTarget
-}
-
-if (intakeField) {
-	intakeField.innerHTML = todaysIntake
-}
-
-if (dateField) {
-	dateField.innerHTML = (new Date()).toDateString()
-}
+const targetStatField = document.querySelector('#target')
+const intakeStatField = document.querySelector('#intake')
+const dateStatField = document.querySelector('#curdate')
+const dateField = document.querySelector('#date')
 
 jug.addEventListener('transitionend', () => {
 	if (currentHeight >= 500) {
@@ -29,7 +18,34 @@ jug.addEventListener('transitionend', () => {
 	}
 })
 
-document.onload = fetchIntake((new Date()).toISOString().split('T')[0])
+document.onload = start()
+
+function start() {
+	congratulation.hidden = true
+	disableBtns(false)
+	if (targetStatField) {
+		targetStatField.innerHTML = dailyTarget
+	}
+
+	if (intakeStatField) {
+		intakeStatField.innerHTML = todaysIntake
+	}
+
+	if (dateStatField) {
+		dateStatField.innerHTML = currDate.toDateString()
+	}
+
+	if (dateField) {
+		dateField.value = currDate.toISOString().split('T')[0]
+	}
+	fetchIntake(currDate.toISOString().split('T')[0])
+}
+
+function changeDate(el) {
+	currDate = new Date(el.value)
+	console.log(currDate)
+	start()
+}
 
 function fill (el, value) {
 	
@@ -55,11 +71,7 @@ function fillUpto(todaysIntake) {
 
 		if (currentHeight >= 500) {
 			currentHeight = 500
-			Object.keys(btns).forEach((key) => {
-				if (btns[key].value != '0') {
-					btns[key].disabled = true
-				}
-			})
+			disableBtns(true)
 		}
 	} else {
 		currentHeight = 0
@@ -72,8 +84,8 @@ function fillUpto(todaysIntake) {
 		})
 	}
 	
-	if (intakeField) {
-		intakeField.innerHTML = todaysIntake
+	if (intakeStatField) {
+		intakeStatField.innerHTML = todaysIntake
 	}
 
 	jug.style.height = currentHeight + 'px'
@@ -107,10 +119,18 @@ function fetchIntake (date) {
 		return res.json()
 	})
 	.then((res) => {
-		todaysIntake = res.data[0].intake || 0
+		todaysIntake = res.data.length ? res.data[0].intake : 0
 		fillUpto(todaysIntake)
 	})
 	.catch((err) => {
 		console.log(err)
+	})
+}
+
+function disableBtns(flag) {
+	Object.keys(btns).forEach((key) => {
+		if (btns[key].value != '0') {
+			btns[key].disabled = flag
+		}
 	})
 }
