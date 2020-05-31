@@ -1,7 +1,7 @@
 body {
 	background: #000;
 	color: #fff;
-	padding: 10px 30px;
+	padding: 10px 10px;
 	font-family: 'Montserrat', sans-serif;
 }
 
@@ -19,26 +19,26 @@ body {
 	display: block;
 	height: 50px;
 	width: 50px;
-	margin: 5px;
-	border: 5px solid blue;
-	border-color: blue transparent transparent transparent;
+	margin: 50px auto;
+	background: #000;
+	color: #fff;
+	border: 5px solid #fff;
+	border-color: #fff transparent transparent transparent;
 	border-radius: 50%;
 	animation: spin 1.2s infinite;
 }
 
 .header {
-	height: 20vh;
 	text-align: center;
-	margin-bottom: 20px;
+	padding: 0 10px;
 }
 
-/*.title {
-	font-size: 22px;
-}*/
+.title {
+	font-size: 1.5em;
+}
 
 .congratulation {
-	color: #66ff33;
-	display: none;
+	color: transparent;
 }
 
 .glass {
@@ -54,6 +54,10 @@ body {
 
 }
 
+.main {
+	visibility: hidden;
+}
+
 .water {
 	width: 100%;
 	height: 0px;
@@ -64,18 +68,17 @@ body {
 	transition: height 2s;
 }
 
-.grid-item {
-	padding: 20px;
+.control, .right {
+	margin: auto;
 }
 
-.control, .right {
-	padding: 20px;
-	margin: auto;
-	align-items: center;
+.grid-item {
+	padding: 10px;
 }
 
 .control > button {
-	height: 20px;
+	display: inline-block;
+	height: 25px;
 	min-width: 50px;
 	text-decoration: none;
 	background: #fff;
@@ -118,8 +121,13 @@ input[type="date"]::-webkit-inner-spin-button {
 
 /* Always display the drop down caret */
 input[type="date"]::-webkit-calendar-picker-indicator {
-    color: #fff;
-    background: #000;
+    color: #000;
+    background: #fff;
+}
+
+input[type="date"]::-moz-calendar-picker-indicator {
+    color: #000;
+    background: #fff;
 }
 
 /* A few custom styles for date inputs */
@@ -147,6 +155,13 @@ input[type="date"], focus {
 
 @media only screen and (min-width: 768px) {
 
+	body {
+		padding: 10px 30px;
+	}
+
+	.title {
+		font-size: 2em;
+	}
 
 	.congratulation {
 		color: #66ff33;
@@ -163,6 +178,11 @@ input[type="date"], focus {
 	.glass {
 		width: 300px;
 	}
+
+	.grid-item {
+		padding: 20px;
+	}
+
 	.control > button {
 		display: block;
 		height: 80px;
@@ -176,8 +196,14 @@ input[type="date"], focus {
 		cursor: pointer;
 	}
 
+
+	.control {
+	}
+
 	.right {
 		text-align: left;
+		padding: 20px;
+
 	}
 
 	.right > ul {

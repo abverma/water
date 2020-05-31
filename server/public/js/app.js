@@ -2,11 +2,14 @@
 let todaysIntake = 0
 let currentHeight = 0
 let currDate = new Date()
+
 const dailyTarget = 4
 const totalHeight = 500
 const congratulation = document.getElementsByClassName('congratulation')[0]
 const jug = document.querySelector('.water')
 const btns = document.getElementsByTagName('button')
+const main = document.querySelector('.main')
+const spinner = document.querySelector('.spinner')
 const targetStatField = document.querySelector('#target')
 const intakeStatField = document.querySelector('#intake')
 const dateStatField = document.querySelector('#curdate')
@@ -15,15 +18,17 @@ const dateField = document.querySelector('#date')
 jug.addEventListener('transitionend', () => {
 	if (currentHeight >= 500) {
 		if (currDate.toDateString().split('T')[0] == (new Date()).toDateString().split('T')[0])
-		congratulation.style.display = 'block'
+		congratulation.style.color = '#66ff33'
 	}
 })
 
 document.onload = start()
 
 function start() {
-	congratulation.style.display = 'none'
+	congratulation.style.color = 'transparent'
+
 	disableBtns(false)
+
 	if (targetStatField) {
 		targetStatField.innerHTML = dailyTarget
 	}
@@ -115,11 +120,17 @@ function updateIntake (intake) {
 }
 
 function fetchIntake (date) {
+	spinner.style.display = 'block'
+	main.style.visibility = 'hidden'
+
 	fetch('/intake?date=' + date) 
 	.then((res) => {
 		return res.json()
 	})
 	.then((res) => {
+		spinner.style.display = 'none'
+		main.style.visibility = 'visible'
+
 		todaysIntake = res.data.length ? res.data[0].intake : 0
 		fillUpto(todaysIntake)
 	})
