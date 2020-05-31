@@ -98,7 +98,7 @@ function updateIntake (intake) {
 			'Content-Type': 'application/json; charset=utf-8'
 		},
 		body:JSON.stringify({
-			date: new Date(),
+			date: currDate,
 			intake: intake
 		})
 	})
