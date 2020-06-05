@@ -131,7 +131,7 @@ function fetchIntake (date) {
 		spinner.style.display = 'none'
 		main.style.visibility = 'visible'
 
-		todaysIntake = res.data.length ? res.data[0].intake : 0
+		todaysIntake = res.data ? res.data.intake : 0
 		fillUpto(todaysIntake)
 	})
 	.catch((err) => {

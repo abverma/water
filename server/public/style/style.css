@@ -109,6 +109,23 @@ footer {
 	text-align: center;
 }
 
+form {
+	height: 100%;
+}
+
+form > input {
+	display: block;
+	margin: 10px auto;
+	padding: 10px;
+	font-size: 18px;
+	border-radius: 2px;
+	border: none;
+}
+
+form > input[type="submit"] {
+	background: #fff;
+	border: none;
+}
 /* Removes the clear button from date inputs */
 input[type="date"]::-webkit-clear-button {
     display: none;

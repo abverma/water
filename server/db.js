@@ -1,7 +1,7 @@
-const {MongoClient} = require('mongodb')
-const {log, error} = require('./customLogger')
+const {MongoClient, ObjectID} = require('mongodb')
+const {logger, log, error} = require('./customLogger')
 
-const {DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME } = process.env
+const {DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME, LOG_LEVEL } = process.env
 
 let uri
 if (DB_HOST == 'localhost' || DB_HOST == '0.0.0.0') {
@@ -9,18 +9,14 @@ if (DB_HOST == 'localhost' || DB_HOST == '0.0.0.0') {
 } else {
 	uri = `mongodb://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?retryWrites=true&w=majority&connectTimeoutMS=300000`
 }
-const client = new MongoClient(uri, { useUnifiedTopology: true })
 
-// client.on('connectionPoolCreated', event => console.dir(event));
-// client.on('connectionPoolClosed', event => console.dir(event));
-// client.on('connectionCreated', event => console.dir(event));
-// client.on('connectionReady', event => console.dir(event));
-// client.on('connectionClosed', event => console.dir(event));
-// client.on('connectionCheckOutStarted', event => console.dir(event));
-// client.on('connectionCheckOutFailed', event => console.dir(event));
-// client.on('connectionCheckedOut', event => console.dir(event));
-// client.on('connectionCheckedIn', event => console.dir(event));
-// client.on('connectionPoolCleared', event => console.dir(event));
+const client = new MongoClient(uri, { 
+	useUnifiedTopology: true,
+	loggerLevel: LOG_LEVEL,
+	logger: log 
+})
+
+let db = null 
 
 exports.connect = (callback) => {
 
@@ -35,15 +31,20 @@ exports.connect = (callback) => {
 			}
 
 			log('Connection successful!')
+			db = client.db(DB_NAME)
 
 			if (callback) {
-				return callback(null, client.db(DB_NAME))
+				return callback(null, db)
 			} else {
-				return Promise.resolve(client.db(DB_NAME))
+				return Promise.resolve(db)
 			}
 			
 		})
 	
+}
+
+exports.getDb = () => {
+	return db
 }
 
 exports.close = () => {
@@ -55,4 +56,33 @@ exports.close = () => {
 			error(err)
 			error('Error in closing connection!')
 		})
+}
+
+exports.findUserById = (id) => {
+	return db.collection('users').findOne({
+		_id: ObjectID(id)
+	})
+}
+
+exports.findUser = (query) => {
+	return db.collection('users').findOne(query)
+}
+
+exports.findIntake = (query, userId) => {
+	query['user_id'] = ObjectID(userId)
+
+	return db.collection('intake').findOne(query)
+}
+
+exports.updateIntake = (intake, userId) => {
+	return db.collection('intake').updateOne({
+		date: intake.date.split('T')[0],
+		user_id: ObjectID(userId)
+	}, {
+		$set: {
+			intake: intake.intake
+		}
+	}, {
+		upsert:true
+	})
 }

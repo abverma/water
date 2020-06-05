@@ -1,22 +1,37 @@
-const express = require('express')
 require('dotenv').config()
+const express = require('express')
+const session = require('express-session')
+const bodyParser = require('body-parser')
+const path = require('path')
 
 const {logger, log, error} = require('./customLogger')
 const dbManager = require('./db')
-
+const {passport} = require('./passport')
 const PORT = process.env.PORT
 const HOST = process.env.HOST
+const publicDir = path.join(__dirname, './public')
 const app = express()
-let db = null
+const isLoggedIn = (req, res, next) => {
+	if (req.user) {
+		next()
+	} else {
+		res.redirect('/login')
+	}
+}
 
 //middlewares
 app.use(logger)
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
-app.use(express.static('public'))
-//routes
+app.use(session({ 
+	secret: 'keyboard', 
+	resave: true,
+  	saveUninitialized: true
+}))
+app.use(passport.initialize())
+app.use(passport.session())
 app.use((req, res, next) => {
-	if (db) {
+	if (dbManager.getDb()) {
 		next()
 	}
 	else {
@@ -25,14 +40,36 @@ app.use((req, res, next) => {
 	}
 })
 
-app.get('/', (req, res) => {
-	res.sendFile('index.html')
+
+//routes
+
+app.get('/logout', function(req, res){
+  req.logout()
+  res.redirect('/login')
 })
 
-app.get('/intake',(req, res) => {
+app.get('/login', (req, res) => {
+	res.sendFile(path.join(publicDir, 'login.html'))
+})
 
-	filter = req.query
-	db.collection('intake').find(filter).limit(15).toArray()
+app.post('/login', 
+  passport.authenticate('local', { 
+  	successRedirect: '/',
+  	failureRedirect: '/login' 
+  })
+)
+
+app.get('/', isLoggedIn, (req, res) => {
+    console.log(req.user)
+    console.log(req.session)
+    console.log(req.isAuthenticated())
+	res.sendFile(path.join(publicDir, 'index.html'))
+})
+
+app.get('/intake', isLoggedIn, (req, res) => {
+	let filter = req.query
+	let userId = req.user._id
+	dbManager.findIntake(filter, userId)
 		.then((result) => {
 			res.status(200).json({
 				success: true,
@@ -45,23 +82,15 @@ app.get('/intake',(req, res) => {
 		})
 })
 
-app.post('/intake',(req, res) => {
+app.post('/intake', isLoggedIn, (req, res) => {
 
 	let intake = req.body
+	let userId = req.user._id
 
 	console.log(intake)
 
-	db.collection('intake').updateOne({
-		date: intake.date.split('T')[0]
-	}, {
-		$set: {
-			intake: intake.intake
-		}
-	}, {
-		upsert:true
-	})
+	dbManager.updateIntake(intake, userId)
 	.then((result) => {
-		console.log('success')
 		res.send({
 			success: true
 		})
@@ -71,6 +100,8 @@ app.post('/intake',(req, res) => {
 		res.status(500)
 	})
 })
+
+app.use(express.static(publicDir))
 
 app.use(function (err, req, res, next) {
   error(err.stack)
