@@ -32,7 +32,6 @@ passport.use(new LocalStrategy((username, password, done) => {
 }))
 
 passport.serializeUser(function(user, done) {
-	console.log('serialize:' + user._id)
 	done(null, user._id)
 })
 
@@ -47,4 +46,4 @@ passport.deserializeUser(function(id, done) {
 	})
 })
 
-exports.passport = passport 
+module.exports = passport 

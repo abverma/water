@@ -1,12 +1,12 @@
 const express = require('express')
 const dbManager = require('../db')
+const {log, error} = require('../customLogger')
 const User = require('../models/user')
-
 const router = express.Router()
 
 router.post('/', (req, res) => {
 	delete req.body.submit
-	console.log(req.body)
+	log(req.body)
 	let {username, password} = req.body
 
 	User.find({
@@ -14,17 +14,17 @@ router.post('/', (req, res) => {
 	})
 	.then((user) => {
 		if (user) {
-			console.log('User exists')
+			log('User exists')
 			return Promise.resolve()
 		} else {
-			console.log('Creating user')
+			log('Creating user')
 			return User.create(req.body)
 		}
 	})
 	.then((result) => {
 		if (result) {
-			console.log('Created user')
-			console.log(result.ops)
+			log('Created user')
+			log(result.ops)
 			req.flash('info', 'User created')
 			res.redirect('/login')
 		} else {
@@ -34,7 +34,7 @@ router.post('/', (req, res) => {
 		
 	})
 	.catch((err) => {
-		console.log(err)
+		erro(err)
 		res.render('error')
 	})
 })

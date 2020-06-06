@@ -1,6 +1,6 @@
 const express = require('express')
 const dbManager = require('../db')
-
+const {log, error} = require('../customLogger')
 const router = express.Router()
 
 router.get('/', (req, res) => {
@@ -24,7 +24,7 @@ router.post('/', (req, res) => {
 	let intake = req.body
 	let userId = req.user._id
 
-	console.log(intake)
+	log(intake)
 
 	dbManager.updateIntake(intake, userId)
 	.then((result) => {
@@ -33,7 +33,7 @@ router.post('/', (req, res) => {
 		})
 	})
 	.then((err) => {
-		console.log(err)
+		erro(err)
 		res.status(500)
 	})
 })
