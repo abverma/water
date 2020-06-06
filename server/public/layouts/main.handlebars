@@ -11,11 +11,22 @@
 	<div class="header">
 		<h1 class="title">Daily water intake tracker</h1>
 	</div>
-	<form method="POST" action="/login">
-		<input type="text" name="username" placeholder="User Name">
-		<input type="password" name="password" placeholder="Password">
-		<input type='submit' name="submit" value="Log In" />	
-	</form>
-	<footer>&copy; 2020-2021 Abhishek Verma</footer>
+
+	<div class="flash">
+		{{#if messages.error}}
+		<div class="error">
+		    <p>{{ messages.error }}</p>
+		</div>
+		{{/if}}
+		{{#if messages.info}}
+		<div class="success">
+		    <p>{{ messages.info }}</p>
+		</div>
+		{{/if}}
+	</div>
+	
+	{{{body}}}
+
+	<!-- <footer>&copy; 2020-2021 Abhishek Verma</footer> -->
 </body>
 </html>

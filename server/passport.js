@@ -1,26 +1,25 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
-const dbManager = require('./db')
+const User = require('./models/user')
 const {logger, log, error} = require('./customLogger')
 
 
 passport.use(new LocalStrategy((username, password, done) => {
 
-  	const db = dbManager.getDb()
-	db.collection('users').findOne({
-		username: username
-	})
+  	User.find({
+  		username
+  	})
 	.then((myuser) => {
 		log('Authenticating')
 
-		if (username != myuser.username) {
+		if (!myuser) {
 			log('User not found')
-			return done(null, false)
+			return done(null, false, {message: 'User not found'})
 		}
 
 		if (password != myuser.password) {
 			log('Password mismatch')
-			return done(null, false)
+			return done(null, false, {message: 'Password mismatch'})
 		}
 		log('Password match')
 		return done(null, myuser)
@@ -33,11 +32,12 @@ passport.use(new LocalStrategy((username, password, done) => {
 }))
 
 passport.serializeUser(function(user, done) {
+	console.log('serialize:' + user._id)
 	done(null, user._id)
 })
 
 passport.deserializeUser(function(id, done) {
-	dbManager.findUserById(id)
+	User.findById(id)
 	.then((myuser) => {
 		done(null, myuser)
 	})

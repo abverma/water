@@ -1,16 +1,29 @@
+//npms
 require('dotenv').config()
 const express = require('express')
 const session = require('express-session')
+const flash = require('express-flash')
+const exphbs  = require('express-handlebars')
+const MongoDBStore = require('connect-mongodb-session')(session)
 const bodyParser = require('body-parser')
 const path = require('path')
 
+//app modules
 const {logger, log, error} = require('./customLogger')
 const dbManager = require('./db')
 const {passport} = require('./passport')
-const PORT = process.env.PORT
-const HOST = process.env.HOST
-const publicDir = path.join(__dirname, './public')
+const intake = require('./routes/intake')
+const login = require('./routes/login')
+const signup = require('./routes/signup')
+
+
+//variables and constants
 const app = express()
+const publicDir = path.join(__dirname, './public')
+const store = new MongoDBStore({
+  uri: dbManager.getUri(),
+  collection: 'sessions'
+})
 const isLoggedIn = (req, res, next) => {
 	if (req.user) {
 		next()
@@ -19,15 +32,24 @@ const isLoggedIn = (req, res, next) => {
 	}
 }
 
+app.engine('handlebars', exphbs())
+app.set('views', publicDir)
+app.set('view engine', 'handlebars')
+
 //middlewares
 app.use(logger)
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 app.use(session({ 
-	secret: 'keyboard', 
-	resave: true,
+	secret: process.env.SECRET, 
+	store: store,
+	cookie: {
+		maxAge:  1000 * 60 * 60 * 24 * 2
+	},
+	resave: false,
   	saveUninitialized: true
 }))
+app.use(flash())
 app.use(passport.initialize())
 app.use(passport.session())
 app.use((req, res, next) => {
@@ -40,78 +62,27 @@ app.use((req, res, next) => {
 	}
 })
 
-
 //routes
-
-app.get('/logout', function(req, res){
-  req.logout()
-  res.redirect('/login')
+app.get('/logout', (req, res) => {
+	req.logout()
+	res.redirect('/login')
 })
-
-app.get('/login', (req, res) => {
-	res.sendFile(path.join(publicDir, 'login.html'))
-})
-
-app.post('/login', 
-  passport.authenticate('local', { 
-  	successRedirect: '/',
-  	failureRedirect: '/login' 
-  })
-)
-
 app.get('/', isLoggedIn, (req, res) => {
-    console.log(req.user)
-    console.log(req.session)
-    console.log(req.isAuthenticated())
 	res.sendFile(path.join(publicDir, 'index.html'))
 })
-
-app.get('/intake', isLoggedIn, (req, res) => {
-	let filter = req.query
-	let userId = req.user._id
-	dbManager.findIntake(filter, userId)
-		.then((result) => {
-			res.status(200).json({
-				success: true,
-				data: result
-			})
-		})
-		.catch((err) => {
-			log(err)
-			res.send(err)
-		})
-})
-
-app.post('/intake', isLoggedIn, (req, res) => {
-
-	let intake = req.body
-	let userId = req.user._id
-
-	console.log(intake)
-
-	dbManager.updateIntake(intake, userId)
-	.then((result) => {
-		res.send({
-			success: true
-		})
-	})
-	.then((err) => {
-		console.log(err)
-		res.status(500)
-	})
-})
-
+app.use('/signup', signup)
+app.use('/login', login)
+app.use('/intake', isLoggedIn, intake)
 app.use(express.static(publicDir))
-
 app.use(function (err, req, res, next) {
-  error(err.stack)
-  res.status(500).send('Something broke!')
+	error(err.stack)
+	res.render('error')
 })
 
-app.listen(PORT, HOST, () => {
-	console.clear()
+
+app.listen(process.env.PORT, process.env.HOST, () => {
 	log(`[${new Date().toUTCString()}] Server started`)
-	log(`Server listening at ${PORT}`)
+	log(`Server listening at ${process.env.PORT}`)
 
 	log('Connecting to db')
 
@@ -126,4 +97,3 @@ app.listen(PORT, HOST, () => {
 	})
 	
 })
-

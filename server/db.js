@@ -1,9 +1,15 @@
 const {MongoClient, ObjectID} = require('mongodb')
 const {logger, log, error} = require('./customLogger')
-
-const {DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME, LOG_LEVEL } = process.env
+const {
+	DB_USERNAME, 
+	DB_PASSWORD, 
+	DB_HOST, 
+	DB_PORT, 
+	DB_NAME, 
+	LOG_LEVEL } = process.env
 
 let uri
+
 if (DB_HOST == 'localhost' || DB_HOST == '0.0.0.0') {
 	uri = `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}?retryWrites=true&w=majority&connectTimeoutMS=300000`
 } else {
@@ -47,6 +53,10 @@ exports.getDb = () => {
 	return db
 }
 
+exports.getUri = () => {
+	return uri
+}
+
 exports.close = () => {
 	client.close()
 		.then(() => {
@@ -56,16 +66,6 @@ exports.close = () => {
 			error(err)
 			error('Error in closing connection!')
 		})
-}
-
-exports.findUserById = (id) => {
-	return db.collection('users').findOne({
-		_id: ObjectID(id)
-	})
-}
-
-exports.findUser = (query) => {
-	return db.collection('users').findOne(query)
 }
 
 exports.findIntake = (query, userId) => {
